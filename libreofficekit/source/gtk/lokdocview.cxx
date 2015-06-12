@@ -32,7 +32,7 @@
 #endif
 
 // Cursor bitmaps from the Android app.
-#define CURSOR_HANDLE_DIR "/opt/libreoffice/android/source/res/drawable/"
+#define CURSOR_HANDLE_DIR "/android/source/res/drawable/"
 // Number of handles around a graphic selection.
 #define GRAPHIC_HANDLE_COUNT 8
 
@@ -740,8 +740,10 @@ renderOverlay(LOKDocView* pDocView, cairo_t* pCairo)
     if (priv->m_bEdit && priv->m_bCursorVisible && !isEmptyRectangle(priv->m_aVisibleCursor) && priv->m_aTextSelectionRectangles.empty())
     {
         // Have a cursor, but no selection: we need the middle handle.
+        gchar* handleMiddlePath = g_strconcat (priv->m_aLOPath, "/../..", CURSOR_HANDLE_DIR, "handle_middle.png", NULL);
         if (!priv->m_pHandleMiddle)
-            priv->m_pHandleMiddle = cairo_image_surface_create_from_png(CURSOR_HANDLE_DIR "handle_middle.png");
+            priv->m_pHandleMiddle = cairo_image_surface_create_from_png(handleMiddlePath);
+        g_free (handleMiddlePath);
         renderHandle(pDocView, pCairo, priv->m_aVisibleCursor, priv->m_pHandleMiddle, priv->m_aHandleMiddleRect);
     }
 
@@ -763,24 +765,30 @@ renderOverlay(LOKDocView* pDocView, cairo_t* pCairo)
         if (!isEmptyRectangle(priv->m_aTextSelectionStart))
         {
             // Have a start position: we need a start handle.
+            gchar* handleStartPath = g_strconcat (priv->m_aLOPath, "/../..", CURSOR_HANDLE_DIR, "handle_start.png", NULL);
             if (!priv->m_pHandleStart)
-                priv->m_pHandleStart = cairo_image_surface_create_from_png(CURSOR_HANDLE_DIR "handle_start.png");
+                priv->m_pHandleStart = cairo_image_surface_create_from_png(handleStartPath);
             renderHandle(pDocView, pCairo, priv->m_aTextSelectionStart, priv->m_pHandleStart, priv->m_aHandleStartRect);
+            g_free (handleStartPath);
         }
         if (!isEmptyRectangle(priv->m_aTextSelectionEnd))
         {
             // Have a start position: we need an end handle.
+            gchar* handleEndPath = g_strconcat (priv->m_aLOPath, "/../..", CURSOR_HANDLE_DIR, "handle_end.png", NULL);
             if (!priv->m_pHandleEnd)
-                priv->m_pHandleEnd = cairo_image_surface_create_from_png(CURSOR_HANDLE_DIR "handle_end.png");
+                priv->m_pHandleEnd = cairo_image_surface_create_from_png(handleEndPath);
             renderHandle(pDocView, pCairo, priv->m_aTextSelectionEnd, priv->m_pHandleEnd, priv->m_aHandleEndRect);
+            g_free (handleEndPath);
         }
     }
 
     if (!isEmptyRectangle(priv->m_aGraphicSelection))
     {
+        gchar* handleGraphicPath = g_strconcat (priv->m_aLOPath, "/../..", CURSOR_HANDLE_DIR, "handle_graphic.png", NULL);
         if (!priv->m_pGraphicHandle)
-            priv->m_pGraphicHandle = cairo_image_surface_create_from_png(CURSOR_HANDLE_DIR "handle_graphic.png");
+            priv->m_pGraphicHandle = cairo_image_surface_create_from_png(handleGraphicPath);
         renderGraphicHandle(pDocView, pCairo, priv->m_aGraphicSelection, priv->m_pGraphicHandle);
+        g_free (handleGraphicPath);
     }
 
     return FALSE;
